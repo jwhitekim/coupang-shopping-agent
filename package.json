@@ -2,6 +2,9 @@
   "name": "coupang-shopping-agent",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -9,10 +12,11 @@
   "scripts": {
     "dev:bot": "npm run dev --workspace apps/telegram-bot",
     "setup-login": "tsx scripts/setup-login.ts",
-    "typecheck": "tsc --noEmit -p packages/shared && tsc --noEmit -p packages/agent && tsc --noEmit -p packages/coupang-browser-adapter && tsc --noEmit -p apps/telegram-bot"
+    "typecheck": "tsc --noEmit -p packages/shared && tsc --noEmit -p packages/database && tsc --noEmit -p packages/policy-engine && tsc --noEmit -p packages/agent && tsc --noEmit -p packages/coupang-browser-adapter && tsc --noEmit -p apps/telegram-bot",
+    "test": "tsx --test 'packages/*/src/**/*.test.ts'"
   },
   "devDependencies": {
-    "@types/node": "^20.14.0",
+    "@types/node": "^25.9.5",
     "tsx": "^4.16.0",
     "typescript": "^5.5.0"
   }

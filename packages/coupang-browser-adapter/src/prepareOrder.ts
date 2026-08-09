@@ -1,5 +1,6 @@
 import type { Page } from "playwright";
 import type { OrderSnapshot, PrepareOrderInput } from "@coupang-agent/shared";
+import { isLoginPage, readAmount } from "./dom.js";
 import { selectors } from "./selectors.js";
 
 export class CoupangLoginRequiredError extends Error {
@@ -59,21 +60,10 @@ export async function prepareOrder(page: Page, productUrl: string, input: Prepar
   };
 }
 
-function isLoginPage(url: string): boolean {
-  return url.includes("login.coupang.com") || url.includes("/login");
-}
-
 async function readQuantity(page: Page): Promise<number> {
   const input = page.locator(selectors.checkout.quantityInput).first();
   if (!(await input.count())) return 1;
   const value = await input.inputValue().catch(() => "1");
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
-}
-
-async function readAmount(page: Page, selector: string): Promise<number> {
-  const text = await page.locator(selector).first().textContent().catch(() => null);
-  if (!text) return 0;
-  const digits = text.replace(/[^0-9]/g, "");
-  return digits ? Number(digits) : 0;
 }

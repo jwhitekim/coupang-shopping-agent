@@ -9,6 +9,8 @@
   "dependencies": {
     "@coupang-agent/agent": "0.1.0",
     "@coupang-agent/coupang-browser-adapter": "0.1.0",
+    "@coupang-agent/database": "0.1.0",
+    "@coupang-agent/policy-engine": "0.1.0",
     "@coupang-agent/shared": "0.1.0",
     "dotenv": "^16.4.5",
     "grammy": "^1.21.0"

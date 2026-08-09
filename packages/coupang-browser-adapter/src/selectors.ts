@@ -22,7 +22,19 @@ export const selectors = {
     shippingAddress: ".shipping-address .address, .delivery-address",
     deliveryEstimate: ".arrival-date, .delivery-date",
     subscriptionBadge: ".subscription-badge, .rocket-fresh-subscription",
-    // 이 선택자는 참조용으로만 존재한다. prepareOrder는 이 요소를 절대 클릭하지 않는다.
+    // 3단계에서만 사용한다. prepareOrder는 이 요소를 절대 클릭하지 않는다 — commitOrder.ts 참고.
     payButton: "#pay-button, button.payment-button",
+  },
+  orderComplete: {
+    orderNumber: ".order-number, .complete-order-id",
+    finalPrice: ".complete-total-price, .order-complete .total-price",
+  },
+  orderHistory: {
+    listUrl: "https://mc.coupang.com/ms/mypage/order/list",
+    row: ".order-list-item, li.order-item",
+    orderNumber: ".order-number, .order-id",
+    productName: ".product-name, .item-name",
+    price: ".order-price, .item-price",
+    orderedAt: ".order-date, .ordered-date",
   },
 };

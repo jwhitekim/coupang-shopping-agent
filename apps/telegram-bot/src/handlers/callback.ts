@@ -1,9 +1,12 @@
+import { randomUUID, createHash } from "node:crypto";
 import type { Context } from "grammy";
 import { runAgentTurn } from "@coupang-agent/agent";
 import { CoupangLoginRequiredError } from "@coupang-agent/coupang-browser-adapter";
+import { buildPurchaseKeyboard } from "../keyboards/purchaseKeyboard.js";
 import { createPreview, deletePreview, getPreview, updatePreview } from "../previewStore.js";
 import { presentCandidate } from "../present.js";
-import { browserAdapter, executor } from "../runtime.js";
+import { handlePurchaseAction } from "./purchaseCallback.js";
+import { browserAdapter, executor, policy, purchaseRepository } from "../runtime.js";
 import { getSession, resetSession } from "../session.js";
 
 export async function handleCallback(ctx: Context): Promise<void> {
@@ -11,7 +14,16 @@ export async function handleCallback(ctx: Context): Promise<void> {
   const userId = ctx.from?.id;
   if (!data || !userId) return;
 
-  const [action, previewId] = data.split(":");
+  const [action, id] = data.split(":");
+
+  // "구매 확정"으로 만들어진 주문(DB purchases 행)에 대한 결제 확정/취소는 후보 미리보기와
+  // 별도 ID 체계를 쓰므로 previewStore를 거치지 않고 바로 처리한다.
+  if (action === "pay" || action === "cancelPurchase") {
+    await handlePurchaseAction(ctx, action, id, userId);
+    return;
+  }
+
+  const previewId = id;
   const preview = getPreview(previewId);
 
   if (!preview || preview.userId !== userId) {
@@ -83,9 +95,23 @@ export async function handleCallback(ctx: Context): Promise<void> {
         quantity: 1,
       });
 
+      // 발급 즉시 해시만 저장하고 원문 토큰은 보관하지 않는다 (docs/security-ops.md 감사 로그 원칙).
+      const confirmationTokenHash = createHash("sha256").update(randomUUID()).digest("hex");
+      const purchaseId = purchaseRepository.createPurchase({
+        telegramUserId: userId,
+        productId: snapshot.productId,
+        productUrl: product.url,
+        vendorItemId: snapshot.vendorItemId,
+        productName: snapshot.productName || product.name,
+        quantity: snapshot.quantity,
+        expectedPrice: snapshot.totalPrice,
+        confirmationTokenHash,
+        expiresAt: new Date(Date.now() + policy.confirmationTtlSeconds * 1000).toISOString(),
+      });
+
       await ctx.reply(
         [
-          "주문 미리보기입니다. (결제 버튼은 누르지 않았습니다)",
+          "주문 미리보기입니다. (아직 결제 버튼을 누르지 않았습니다)",
           "",
           `상품: ${snapshot.productName || product.name}`,
           `수량: ${snapshot.quantity}`,
@@ -96,10 +122,11 @@ export async function handleCallback(ctx: Context): Promise<void> {
           snapshot.deliveryEstimate ? `도착 예정: ${snapshot.deliveryEstimate}` : undefined,
           snapshot.isSubscription ? "⚠️ 정기배송 상품으로 보입니다." : undefined,
           "",
-          "실제 결제 실행은 3단계(정책 엔진·안전한 결제)에서 지원됩니다.",
+          "이 내용으로 결제를 진행할까요?",
         ]
           .filter(Boolean)
           .join("\n"),
+        { reply_markup: buildPurchaseKeyboard(purchaseId) },
       );
     } catch (error) {
       if (error instanceof CoupangLoginRequiredError) {
