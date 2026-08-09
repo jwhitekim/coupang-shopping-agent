@@ -98,6 +98,20 @@ test("getDailySpend는 오늘 COMPLETED된 결제만 합산한다", () => {
   assert.equal(repo.getDailySpend(1, since), 12345);
 });
 
+test("listByStatus는 해당 상태의 구매만 반환한다", () => {
+  const repo = setup();
+  const unknownId = createSamplePurchase(repo);
+  repo.lockForValidating(unknownId);
+  repo.lockForExecuting(unknownId, "fp");
+  repo.markUnknown(unknownId, "COMMIT_RESULT_UNKNOWN");
+
+  createSamplePurchase(repo); // AWAITING_CONFIRMATION 상태로 남아있음 — 대상 아님
+
+  const unknownPurchases = repo.listByStatus("UNKNOWN");
+  assert.equal(unknownPurchases.length, 1);
+  assert.equal(unknownPurchases[0]?.purchaseId, unknownId);
+});
+
 test("recordEvent는 purchase_events에 감사 로그를 남긴다", () => {
   const repo = setup();
   const purchaseId = createSamplePurchase(repo);

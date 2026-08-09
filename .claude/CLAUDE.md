@@ -14,27 +14,32 @@
   다만 `commitOrder`/`reconcileOrder`는 실제 쿠팡 계정으로 아직 한 번도 호출해보지 않았다 — 셀렉터가
   실제 DOM으로 검증되지 않았기 때문이다. 실행 전 반드시 `npm run setup-login` 후 셀렉터를 직접 확인할 것.
 - **4단계 보류**: HTTP 조회 최적화. 비공개 API 요청 형식을 사용자가 직접 역공학한 뒤 진행 예정.
-- **5단계 이후**: 진행 중인 것만 반영해서 이 섹션을 갱신할 것
+- **5단계 코드 완료**: 결제 전 단계 실패는 FAILED+스크린샷(`data/screenshots/`, Git에 커밋 안 함)으로,
+  결제 시도 이후 실패는 UNKNOWN+주문내역 대조로 구분해서 처리한다(`purchaseWorker.ts`). UNKNOWN 건을
+  나중에 다시 대조하는 운영 스크립트(`scripts/reconcile-unknown.ts`)도 추가했다. 비상 정지(`/stop`)와
+  구매 감사 로그(`purchase_events`)는 각각 1·3단계에서 이미 구현됨.
 
 ## 워크스페이스 구조
 
 ```text
 apps/telegram-bot          텔레그램 봇 (핸들러, 세션, 키보드, 구매 워커)
 packages/agent              Gemini function calling 기반 추천 루프 (packages/agent/src/agentLoop.ts)
-packages/coupang-browser-adapter  Playwright로 쿠팡 검색·상세·주문서 조회·결제·주문내역 대조
+packages/coupang-browser-adapter  Playwright로 쿠팡 검색·상세·주문서 조회·결제·주문내역 대조·스크린샷
 packages/database            SQLite(node:sqlite)로 주문 상태·감사 로그 관리
 packages/policy-engine        금액·수량·정기배송 등 정책 검사, 결제 직전 재검증
 packages/shared              공통 타입
 scripts/setup-login.ts       최초 1회 headed 브라우저로 쿠팡 로그인, 프로필 저장
+scripts/reconcile-unknown.ts UNKNOWN 상태 구매를 주문내역과 다시 대조 (운영용)
 ```
 
 ## 명령어
 
 ```text
-npm run dev:bot        텔레그램 봇 개발 실행 (.env 필요)
-npm run setup-login     headed 브라우저로 쿠팡 최초 로그인
-npm run typecheck       전 워크스페이스 tsc --noEmit
-npm test                순수 로직 단위 테스트 (node:test, 브라우저 자동화는 대상 아님)
+npm run dev:bot             텔레그램 봇 개발 실행 (.env 필요)
+npm run setup-login          headed 브라우저로 쿠팡 최초 로그인
+npm run reconcile-unknown    UNKNOWN 상태 구매를 주문내역과 재대조
+npm run typecheck            전 워크스페이스 tsc --noEmit (scripts 포함)
+npm test                     순수 로직 단위 테스트 (node:test, 브라우저 자동화는 대상 아님)
 ```
 
 Node 22.5 이상이 필요하다 (`packages/database`가 내장 `node:sqlite`를 쓴다).

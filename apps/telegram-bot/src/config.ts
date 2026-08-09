@@ -14,4 +14,5 @@ export const config = {
   coupangProfileDir: process.env.COUPANG_PROFILE_DIR ?? "./data/coupang-profile",
   headless: (process.env.COUPANG_HEADLESS ?? "true") === "true",
   dbPath: process.env.DB_PATH ?? "./data/app.db",
+  screenshotDir: process.env.SCREENSHOT_DIR ?? "./data/screenshots",
 };

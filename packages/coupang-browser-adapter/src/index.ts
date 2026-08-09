@@ -54,6 +54,13 @@ export class CoupangBrowserAdapter {
     return reconcileOrderImpl(page, input);
   }
 
+  // 5단계: 선택자를 못 찾는 등 DOM 변경으로 실패했을 때 원인 파악용 스크린샷을 남긴다
+  // (docs/security-ops.md 17장 "DOM 변경" 대응). 민감정보가 찍힐 수 있으니 Git에는 올리지 않는다.
+  async captureScreenshot(path: string): Promise<void> {
+    const page = await this.getPage();
+    await page.screenshot({ path });
+  }
+
   async close(): Promise<void> {
     await closeBrowserContext();
   }

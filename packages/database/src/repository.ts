@@ -93,6 +93,14 @@ export class PurchaseRepository {
     return row ? mapRow(row) : undefined;
   }
 
+  // 5단계 운영 도구(scripts/reconcile-unknown.ts)가 UNKNOWN 상태 구매를 다시 대조할 때 쓴다.
+  listByStatus(status: PurchaseStatus): PurchaseRecord[] {
+    const rows = this.db
+      .prepare(`SELECT * FROM purchases WHERE status = ? ORDER BY created_at ASC`)
+      .all(status) as unknown as PurchaseRow[];
+    return rows.map(mapRow);
+  }
+
   // AWAITING_CONFIRMATION → VALIDATING. "결제 확정" 버튼이 두 번 눌려도 한 번만 통과한다.
   lockForValidating(purchaseId: string): boolean {
     return this.transition(purchaseId, "AWAITING_CONFIRMATION", "VALIDATING");

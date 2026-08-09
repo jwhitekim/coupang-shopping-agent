@@ -3,5 +3,6 @@ node_modules/
 .DS_Store
 /data/app.db
 /data/coupang-profile/
+/data/screenshots/
 /playwright/.auth/
 *.log
