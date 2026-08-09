@@ -1,0 +1,20 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ ! -d app ]; then exit 0; fi; OUT=$( { pytest -q && mypy app/ && ruff check; } 2>&1 ); if [ $? -ne 0 ]; then echo \"$OUT\" >&2; exit 2; fi",
+            "timeout": 120,
+            "statusMessage": "완료 조건 검증 중 (pytest / mypy / ruff)..."
+          }
+        ]
+      }
+    ]
+  }
+}

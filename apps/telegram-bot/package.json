@@ -1,0 +1,16 @@
+{
+  "name": "telegram-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@coupang-agent/agent": "0.1.0",
+    "@coupang-agent/coupang-browser-adapter": "0.1.0",
+    "@coupang-agent/shared": "0.1.0",
+    "dotenv": "^16.4.5",
+    "grammy": "^1.21.0"
+  }
+}
