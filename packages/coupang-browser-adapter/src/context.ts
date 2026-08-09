@@ -1,22 +1,22 @@
 import { chromium, type BrowserContext } from "playwright";
 
 export interface BrowserAdapterConfig {
-  profileDir: string;
   headless: boolean;
 }
 
 let contextPromise: Promise<BrowserContext> | null = null;
 
-// 전용 프로필 디렉터리로 persistent context를 하나만 유지한다.
-// (동일 프로필을 동시에 여러 프로세스에서 열지 않는다는 md 5장 원칙을 지키기 위함)
+// 검색·상세조회만 하므로 로그인 세션을 유지할 이유가 없다 — 매번 새 컨텍스트를 쓴다.
+// (쿠팡 로그인 자동화는 Akamai 봇 탐지에 막혀서 이 프로젝트 범위에서 제외했다. docs/security-ops.md 참고)
 export function getBrowserContext(config: BrowserAdapterConfig): Promise<BrowserContext> {
   if (!contextPromise) {
-    contextPromise = chromium.launchPersistentContext(config.profileDir, {
-      headless: config.headless,
-      locale: "ko-KR",
-      timezoneId: "Asia/Seoul",
-      viewport: { width: 1440, height: 1000 },
-    });
+    contextPromise = chromium.launch({ headless: config.headless }).then((browser) =>
+      browser.newContext({
+        locale: "ko-KR",
+        timezoneId: "Asia/Seoul",
+        viewport: { width: 1440, height: 1000 },
+      }),
+    );
   }
   return contextPromise;
 }
@@ -24,7 +24,7 @@ export function getBrowserContext(config: BrowserAdapterConfig): Promise<Browser
 export async function closeBrowserContext(): Promise<void> {
   if (contextPromise) {
     const context = await contextPromise;
-    await context.close();
+    await context.browser()?.close();
     contextPromise = null;
   }
 }

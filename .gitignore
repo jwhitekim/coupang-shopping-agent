@@ -1,8 +1,7 @@
 node_modules/
 .env
 .DS_Store
-/data/app.db
-/data/coupang-profile/
-/data/screenshots/
-/playwright/.auth/
 *.log
+
+# 더 이상 코드에서 쓰지 않지만, 과거 로그인 시도로 남은 세션/캐시가 있을 수 있어 계속 무시한다.
+/data/

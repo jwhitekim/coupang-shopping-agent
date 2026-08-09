@@ -13,28 +13,5 @@ export const selectors = {
   product: {
     name: "h2.prod-buy-header__title, h1.prod-buy-header__title",
     optionSelect: "select.prod-option__select",
-    buyNowButton: "button.prod-buy-btn, a.buy-now",
-  },
-  checkout: {
-    quantityInput: "input[name='quantity'], input.quantity",
-    totalPayment: "#totalPayAmount, .total-payment .total-price",
-    shippingFee: ".delivery-fee, .shipping-fee",
-    shippingAddress: ".shipping-address .address, .delivery-address",
-    deliveryEstimate: ".arrival-date, .delivery-date",
-    subscriptionBadge: ".subscription-badge, .rocket-fresh-subscription",
-    // 3단계에서만 사용한다. prepareOrder는 이 요소를 절대 클릭하지 않는다 — commitOrder.ts 참고.
-    payButton: "#pay-button, button.payment-button",
-  },
-  orderComplete: {
-    orderNumber: ".order-number, .complete-order-id",
-    finalPrice: ".complete-total-price, .order-complete .total-price",
-  },
-  orderHistory: {
-    listUrl: "https://mc.coupang.com/ms/mypage/order/list",
-    row: ".order-list-item, li.order-item",
-    orderNumber: ".order-number, .order-id",
-    productName: ".product-name, .item-name",
-    price: ".order-price, .item-price",
-    orderedAt: ".order-date, .ordered-date",
   },
 };

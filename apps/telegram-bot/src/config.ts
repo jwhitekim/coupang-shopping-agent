@@ -11,8 +11,5 @@ export const config = {
   allowedUserId: Number(required("ALLOWED_TELEGRAM_USER_ID")),
   geminiApiKey: required("GEMINI_API_KEY"),
   geminiModel: process.env.GEMINI_MODEL ?? "gemini-2.5-flash",
-  coupangProfileDir: process.env.COUPANG_PROFILE_DIR ?? "./data/coupang-profile",
   headless: (process.env.COUPANG_HEADLESS ?? "true") === "true",
-  dbPath: process.env.DB_PATH ?? "./data/app.db",
-  screenshotDir: process.env.SCREENSHOT_DIR ?? "./data/screenshots",
 };

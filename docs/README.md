@@ -3,6 +3,11 @@
 쿠팡 텔레그램 자동구매 에이전트의 설계 문서. 원래 하나의 파일(`coupang-telegram-shopping-agent.md`)이었던
 것을 주제별로 나눴다. 코드를 건드리기 전에 먼저 볼 요약은 프로젝트 루트의 `.claude/CLAUDE.md`를 참고한다.
 
+> **⚠️ 지금 코드와 다른 부분이 있다.** 쿠팡이 Akamai Bot Manager로 로그인 자동화를 차단해서, 로그인이
+> 필요한 기능(주문 미리보기·결제·정책 엔진·주문 상태 머신)은 전부 코드에서 제거했다. 아래 문서 중
+> `order-lifecycle.md`, `data-model.md`, `mcp-tools.md`, `roadmap.md`의 3·5단계는 그 결정 이전의
+> 설계 기록으로만 남아있다. 지금 실제로 하는 일은 `.claude/CLAUDE.md`를 기준으로 본다.
+
 - [overview.md](overview.md) — 결론 요약, 사용자 경험(대화 예시), 전체 아키텍처
 - [components.md](components.md) — Telegram Bot / LLM Agent / Shopping Service / Policy Engine / Coupang Adapter 역할
 - [coupang-integration.md](coupang-integration.md) — HTTP vs Playwright 라우팅, 위험도 분류, Playwright 운영 방식
