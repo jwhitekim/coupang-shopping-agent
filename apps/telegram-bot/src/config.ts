@@ -10,6 +10,6 @@ export const config = {
   botToken: required("TELEGRAM_BOT_TOKEN"),
   allowedUserId: Number(required("ALLOWED_TELEGRAM_USER_ID")),
   geminiApiKey: required("GEMINI_API_KEY"),
-  geminiModel: process.env.GEMINI_MODEL ?? "gemini-2.5-flash",
+  geminiModel: process.env.GEMINI_MODEL ?? "gemini-3.1-flash-lite",
   headless: (process.env.COUPANG_HEADLESS ?? "true") === "true",
 };
