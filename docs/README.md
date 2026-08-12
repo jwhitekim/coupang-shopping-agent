@@ -7,6 +7,10 @@
 > 필요한 기능(주문 미리보기·결제·정책 엔진·주문 상태 머신)은 전부 코드에서 제거했다. 아래 문서 중
 > `order-lifecycle.md`, `data-model.md`, `mcp-tools.md`, `roadmap.md`의 3·5단계는 그 결정 이전의
 > 설계 기록으로만 남아있다. 지금 실제로 하는 일은 `.claude/CLAUDE.md`를 기준으로 본다.
+>
+> **추가로(2026-08-12)**: 남은 검색·추천 기능도 실제로는 동작하지 않는다 — 쿠팡은 검색 페이지까지
+> Akamai로 막고, 쿠팡·네이버 공식 API도 개인 개발자에게는 상품 검색을 열어주지 않는다. 자세한 내용은
+> `.claude/CLAUDE.md`의 "왜 상품 검색도 API로 자동화돼 있지 않은가" 참고.
 
 - [overview.md](overview.md) — 결론 요약, 사용자 경험(대화 예시), 전체 아키텍처
 - [components.md](components.md) — Telegram Bot / LLM Agent / Shopping Service / Policy Engine / Coupang Adapter 역할
