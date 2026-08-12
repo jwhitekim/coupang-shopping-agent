@@ -32,7 +32,9 @@ bot.on("message:text", handleMessage);
 bot.on("callback_query:data", handleCallback);
 
 bot.catch((err) => {
-  console.error("Bot error:", err);
+  // err(BotError)는 ctx(봇 토큰 포함)를 프로퍼티로 들고 있어서, err 객체 전체를 찍으면
+  // 로그에 토큰이 평문으로 노출된다. message/stack(원본 에러 것)만 남긴다.
+  console.error("Bot error:", err.message, err.stack);
 });
 
 bot.start();
