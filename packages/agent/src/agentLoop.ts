@@ -98,8 +98,13 @@ async function handleCalls(
       }
 
       case "ask_clarifying_question": {
-        const { questions } = call.args as { questions?: string[] };
-        terminal = { type: "ask", questions: questions ?? [] };
+        // call.args는 모델이 준 값이라 선언한 스키마(questions: string[])와 다른 모양으로
+        // 올 수도 있다 (예: 배열이 아닌 문자열 하나). 타입 단언만 믿지 않고 배열로 정규화한다.
+        const { questions } = call.args as { questions?: unknown };
+        terminal = {
+          type: "ask",
+          questions: Array.isArray(questions) ? questions : questions ? [String(questions)] : [],
+        };
         responseParts.push(toolResponse("ask_clarifying_question", { ok: true }));
         break;
       }
