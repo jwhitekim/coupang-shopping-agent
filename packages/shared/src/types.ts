@@ -24,4 +24,12 @@ export interface ProductOption {
 export interface ProductDetail extends Product {
   options: ProductOption[];
   deliveryEstimate?: string;
+  description?: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  reviewHighlights?: string[];
+  // 스냅샷 캡처 시점(ISO 날짜). 라이브 데이터가 아님을 모델·사용자에게 알리기 위한 필드 —
+  // docs/snapshot-mode.md 참고. 라이브 어댑터(coupang-browser-adapter)는 비워둔다.
+  capturedAt?: string;
 }

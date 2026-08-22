@@ -1,13 +1,15 @@
 import { createGeminiModel, type AgentToolExecutor } from "@coupang-agent/agent";
-import { CoupangBrowserAdapter } from "@coupang-agent/coupang-browser-adapter";
+import { SnapshotAdapter } from "@coupang-agent/snapshot-adapter";
 import { config } from "./config.js";
 
 export const model = createGeminiModel(config.geminiApiKey, config.geminiModel);
 
-export const browserAdapter = new CoupangBrowserAdapter({ headless: config.headless });
+// 라이브 검색은 Akamai/API 정책으로 막혀있어(docs/snapshot-mode.md), 수동 캡처한 상품
+// 스냅샷(packages/snapshot-adapter/data/snapshots)을 대신 읽는다.
+export const snapshotAdapter = new SnapshotAdapter();
 
-// Agent 패키지에 실제 브라우저 자동화를 주입한다. (에이전트는 Playwright를 모른다)
+// Agent 패키지에 실제 검색/조회 구현을 주입한다.
 export const executor: AgentToolExecutor = {
-  searchProducts: (query) => browserAdapter.searchProducts(query),
-  inspectProduct: (productId, url) => browserAdapter.inspectProduct(url, productId),
+  searchProducts: (query) => snapshotAdapter.searchProducts(query),
+  inspectProduct: (productId, url) => snapshotAdapter.inspectProduct(url, productId),
 };

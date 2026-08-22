@@ -25,7 +25,7 @@ export const shoppingTools: FunctionDeclaration[] = [
   {
     name: "inspect_product",
     description:
-      "특정 상품의 옵션·배송 예정일 등 상세 정보를 확인한다. search_products가 반환한 productId만 사용할 수 있다.",
+      "특정 상품의 옵션·배송 예정일·설명·평점·리뷰 요약 등 상세 정보를 확인한다. search_products가 반환한 productId만 사용할 수 있다.",
     parameters: {
       type: SchemaType.OBJECT,
       properties: {
@@ -69,7 +69,10 @@ export const SYSTEM_INSTRUCTION = `너는 쿠팡 쇼핑 비서다. 사용자의 
 규칙:
 - 반드시 도구 호출로 얻은 실제 검색 결과에 있는 상품만 추천해라. 목록에 없는 가격이나 상품을 지어내지 마라.
 - 필요하면 search_products를 여러 번, 다른 키워드로도 호출할 수 있다.
-- 특정 후보를 더 검증하고 싶으면 inspect_product를 사용해라.
+- 특정 후보를 더 검증하고 싶으면 inspect_product를 사용해라. 설명이나 리뷰 요약이 스펙·가격과
+  어긋나 보이면(예: 단종 임박 언급, 리뷰의 하자 지적) 그 의심을 추천 사유에 명시해라.
+- inspect_product 결과의 capturedAt은 스냅샷이 캡처된 시점이다. 실시간 데이터가 아니므로
+  사용자에게 추천할 때 "이 정보는 {capturedAt} 기준"이라고 알려줘라.
 - 가격대, 필수 기능처럼 추천에 꼭 필요한 정보가 부족하면 ask_clarifying_question을 호출해라.
 - 추천할 상품이 정해지면 recommend_product를 호출해라.
 - 매 턴은 반드시 ask_clarifying_question 또는 recommend_product 호출로 끝나야 한다. 도구 호출 없이 그냥 텍스트로만 답하지 마라.

@@ -92,6 +92,12 @@ async function handleCalls(
           toolResponse("inspect_product", {
             options: detail.options,
             deliveryEstimate: detail.deliveryEstimate ?? null,
+            description: detail.description ?? null,
+            specs: detail.specs ?? null,
+            rating: detail.rating ?? null,
+            reviewCount: detail.reviewCount ?? null,
+            reviewHighlights: detail.reviewHighlights ?? null,
+            capturedAt: detail.capturedAt ?? null,
           }),
         );
         break;
